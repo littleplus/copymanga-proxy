@@ -1,0 +1,13 @@
+[Unit]
+Description=mangaproxy(CopyManga proxy and replace)
+After=network.target
+
+[Service]
+User=root
+Type=simple
+Environment=PORT=10080
+ExecStart=/usr/bin/mangaproxy
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
