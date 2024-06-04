@@ -1,4 +1,4 @@
-module git.runode.com/littleplus/debug-proxy
+module git.runode.com/littleplus/copymanga-proxy
 
 go 1.21.5
 

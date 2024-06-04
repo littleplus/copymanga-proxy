@@ -5,8 +5,7 @@ After=network.target
 [Service]
 User=root
 Type=simple
-Environment=PORT=10080
-ExecStart=/usr/bin/mangaproxy
+ExecStart=/usr/bin/mangaproxy -l 127.0.0.1:10080
 Restart=always
 
 [Install]

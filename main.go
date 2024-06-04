@@ -3,18 +3,32 @@ package main
 import (
 	"bytes"
 	"compress/gzip"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
+
+var (
+	listen  string
+	tlsCert string
+	tlsKey  string
+
+	trustProxy = []string{"10.0.0.0/8", "192.168.0.0/16", "172.16.0.0/12", "127.0.0.0/8"}
+)
+
+func init() {
+	flag.StringVar(&listen, "l", ":8080", "listen host and port")
+	flag.StringVar(&tlsCert, "c", "", "enable tls(debug):tls cert")
+	flag.StringVar(&tlsKey, "k", "", "enable tls(debug):tls key")
+}
 
 func proxyHandler(c *gin.Context) {
 	remote, err := url.Parse("https://api.mangacopy.com")
@@ -72,12 +86,14 @@ func proxyHandler(c *gin.Context) {
 }
 
 func main() {
+	flag.Parse()
+
 	r := gin.Default()
+	r.SetTrustedProxies(trustProxy)
 	r.Any("/*anypath", proxyHandler)
-	if len(os.Args) > 1 {
-		tlsCert, tlsKey := os.Args[1], os.Args[2]
+	if tlsCert != "" && tlsKey != "" {
 		r.RunTLS(":443", tlsCert, tlsKey)
 	} else {
-		r.Run()
+		r.Run(listen)
 	}
 }
