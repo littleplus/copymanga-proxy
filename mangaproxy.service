@@ -1,0 +1,12 @@
+[Unit]
+Description=mangaproxy(CopyManga proxy and replace)
+After=network.target
+
+[Service]
+User=root
+Type=simple
+ExecStart=/usr/bin/mangaproxy -l 127.0.0.1:10080
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
